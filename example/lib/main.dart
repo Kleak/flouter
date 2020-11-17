@@ -54,12 +54,13 @@ class HomePage extends Page {
   @override
   Route createRoute(BuildContext context) {
     return PageRouteBuilder(
-        settings: this,
-        pageBuilder: (context, _, __) {
-          return Home(
-            pushNewRoute: pushNewRoute,
-          );
-        });
+      settings: this,
+      pageBuilder: (context, _, __) {
+        return Home(
+          pushNewRoute: pushNewRoute,
+        );
+      },
+    );
   }
 }
 
