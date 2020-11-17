@@ -20,8 +20,6 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
   final Map<RegExp, PageBuilder> pages;
   final PageBuilder pageNotFound;
 
-  Page currentPage;
-
   UriRouterDelegate({this.initialPage, @required this.pages, @required this.pageNotFound});
 
   Uri get currentConfiguration => _uris.isNotEmpty ? _uris.last : null;
@@ -31,7 +29,7 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
     return Navigator(
       key: navigatorKey,
       pages: [
-        if (_pages.isEmpty) initialPage,
+        if (_pages.isEmpty) initialPage ?? Container(),
         for (final page in _pages) page,
       ],
       onPopPage: (route, result) {
