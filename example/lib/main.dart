@@ -29,8 +29,7 @@ class _BooksAppState extends State<BooksApp> {
       ),
     ),
     pages: {
-      RegExp(r'^/$'): (_, pushNewRoute) =>
-          MaterialPage(key: ValueKey('home-page'), child: Home(pushNewRoute: pushNewRoute)),
+      RegExp(r'^/$'): (_, pushNewRoute) => HomePage(pushNewRoute),
       RegExp(r'^/test/[a-z]+/$'): (uri, pushNewRoute) => TestPage(uri.path),
     },
   );
@@ -44,6 +43,23 @@ class _BooksAppState extends State<BooksApp> {
       routerDelegate: _routerDelegate,
       routeInformationParser: _routeInformationParser,
     );
+  }
+}
+
+class HomePage extends Page {
+  final PushNewRoute pushNewRoute;
+
+  HomePage(this.pushNewRoute) : super(key: ValueKey('home-page'));
+
+  @override
+  Route createRoute(BuildContext context) {
+    return PageRouteBuilder(
+        settings: this,
+        pageBuilder: (context, _, __) {
+          return Home(
+            pushNewRoute: pushNewRoute,
+          );
+        });
   }
 }
 
@@ -62,11 +78,17 @@ class Home extends StatelessWidget {
         child: Column(
           children: [
             Text('Home'),
-            FlatButton(
+            TextButton(
               onPressed: () {
-                pushNewRoute(Uri(path: '/test/1234/'));
+                pushNewRoute(Uri(path: '/test/toto/'));
               },
               child: Text('Test toto'),
+            ),
+            TextButton(
+              onPressed: () {
+                pushNewRoute(Uri(path: '/test/12345/'));
+              },
+              child: Text('Test 12345'),
             ),
           ],
         ),
