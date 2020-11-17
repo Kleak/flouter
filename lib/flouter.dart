@@ -16,7 +16,7 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
   final navigatorKey = GlobalKey<NavigatorState>();
   final _pages = <Page>[];
   final _uris = <Uri>[];
-  final Page initialPage;
+  final PageBuilder initialPage;
   final Map<RegExp, PageBuilder> pages;
   final PageBuilder pageNotFound;
 
@@ -29,7 +29,7 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
     return Navigator(
       key: navigatorKey,
       pages: [
-        if (_pages.isEmpty) initialPage ?? Container(),
+        if (_pages.isEmpty) initialPage(null, setNewRoutePath) ?? Container(),
         for (final page in _pages) page,
       ],
       onPopPage: (route, result) {

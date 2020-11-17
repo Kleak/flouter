@@ -20,14 +20,7 @@ class _BooksAppState extends State<BooksApp> {
         ),
       ),
     ),
-    initialPage: MaterialPage(
-      key: ValueKey('initial-page'),
-      child: Scaffold(
-        body: Center(
-          child: Text('Initial page'),
-        ),
-      ),
-    ),
+    initialPage: (_, pushNewRoute) => HomePage(pushNewRoute),
     pages: {
       RegExp(r'^/$'): (_, pushNewRoute) => HomePage(pushNewRoute),
       RegExp(r'^/test/[a-z]+/$'): (uri, pushNewRoute) => TestPage(uri.path),
