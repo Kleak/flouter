@@ -1,7 +1,7 @@
-name: Test Flouter on main
+name: Test Flouter on PR
 
 on:
-  push:
+  pull_request:
     branches:
       - master
 
