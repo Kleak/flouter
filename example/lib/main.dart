@@ -27,14 +27,12 @@ class _BooksAppState extends State<BooksApp> {
     },
   );
 
-  final _routeInformationParser = UriRouteInformationParser();
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Uri navigator App',
       routerDelegate: _routerDelegate,
-      routeInformationParser: _routeInformationParser,
+      routeInformationParser: UriRouteInformationParser(),
     );
   }
 }

@@ -1,14 +1,37 @@
-# flouter
+A Navigator 2.0 router for Flutter
 
-A new Flutter package project.
 
-## Getting Started
+Easy to use router library that do all the work for you !
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+#   Easy
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+First create a MaterialApp.router :
+
+```dart
+return MaterialApp.router(
+    title: 'Uri navigator App',
+    routerDelegate: _routerDelegate,
+    routeInformationParser: UriRouteInformationParser(),
+);
+```
+
+Second initialize your _routerDelegate like this :
+```dart
+final _routerDelegate = UriRouterDelegate(
+    pageNotFound: (flouterInformations) => MaterialPage(
+        key: ValueKey('not-found-page'),
+        child: Scaffold(
+        body: Center(
+            child: Text('Page ${flouterInformations.uri.path} not found'),
+        ),
+        ),
+    ),
+    initialPage: (flouterInformations) => HomePage(flouterInformations.push),
+    pages: {
+        RegExp(r'^/$'): (flouterInformations) => HomePage(flouterInformations.push),
+        RegExp(r'^/test/([a-z]+)/$'): (flouterInformations) => TestPage(flouterInformations),
+    },
+);
+```
+
+That's all you have to do ;)
