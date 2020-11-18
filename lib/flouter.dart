@@ -78,6 +78,7 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
         _uris.add(uri);
         notifyListeners();
         _findRoute = true;
+        break;
       }
     }
     if (!_findRoute) {
