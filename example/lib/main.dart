@@ -23,7 +23,7 @@ class _BooksAppState extends State<BooksApp> {
     initialPage: (flouterInformations) => HomePage(flouterInformations.push),
     pages: {
       RegExp(r'^/$'): (flouterInformations) => HomePage(flouterInformations.push),
-      RegExp(r'^/test/[a-z]+/$'): (flouterInformations) => TestPage(flouterInformations.uri.path),
+      RegExp(r'^/test/([a-z]+)/$'): (flouterInformations) => TestPage(flouterInformations),
     },
   );
 
@@ -74,7 +74,7 @@ class Home extends StatelessWidget {
             Text('Home'),
             TextButton(
               onPressed: () {
-                pushNewRoute(Uri(path: '/test/toto/'));
+                pushNewRoute(Uri(path: '/test/toto/', queryParameters: {'limit': '12'}));
               },
               child: Text('Test toto'),
             ),
@@ -92,7 +92,9 @@ class Home extends StatelessWidget {
 }
 
 class TestPage extends Page {
-  TestPage(String name) : super(key: ValueKey('$name-page'), name: name);
+  final FlouterInformations flouterInformations;
+  TestPage(this.flouterInformations)
+      : super(key: ValueKey('${flouterInformations.uri.path}-page'), name: flouterInformations.uri.path);
 
   @override
   Route createRoute(BuildContext context) {
@@ -101,6 +103,8 @@ class TestPage extends Page {
       builder: (context) {
         return Test(
           uri: Uri(path: name),
+          userId: flouterInformations.match.group(1),
+          limit: int.tryParse(flouterInformations.uri.queryParameters['limit'] ?? -1) ?? -1,
         );
       },
     );
@@ -109,8 +113,10 @@ class TestPage extends Page {
 
 class Test extends StatelessWidget {
   final Uri uri;
+  final String userId;
+  final int limit;
 
-  const Test({Key key, @required this.uri}) : super(key: key);
+  const Test({Key key, @required this.uri, @required this.userId, @required this.limit}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -122,6 +128,8 @@ class Test extends StatelessWidget {
         child: Column(
           children: [
             Text('test $uri'),
+            Text('userId = $userId'),
+            Text('limit = $limit'),
             FlatButton(
               onPressed: () {
                 Navigator.of(context).pop();

@@ -18,7 +18,7 @@ class UriRouteInformationParser extends RouteInformationParser<Uri> {
   Future<Uri> parseRouteInformation(RouteInformation routeInformation) async => Uri.parse(routeInformation.location);
 
   @override
-  RouteInformation restoreRouteInformation(Uri uri) => RouteInformation(location: uri.path);
+  RouteInformation restoreRouteInformation(Uri uri) => RouteInformation(location: Uri.decodeComponent(uri.toString()));
 }
 
 class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavigatorRouterDelegateMixin<Uri> {
@@ -58,6 +58,9 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
 
   @override
   Future<void> setNewRoutePath(Uri uri) async {
+    print('uri = $uri');
+    print('uri.path = ${uri.path}');
+
     bool _findRoute = false;
     for (var i = 0; i < pages.keys.length; i++) {
       final key = pages.keys.elementAt(i);
