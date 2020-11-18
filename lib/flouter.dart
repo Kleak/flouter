@@ -29,7 +29,7 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
   final Map<RegExp, PageBuilder> pages;
   final PageBuilder pageNotFound;
 
-  UriRouterDelegate({this.initialPage, @required this.pages, @required this.pageNotFound});
+  UriRouterDelegate({this.initialPage, @required this.pages, this.pageNotFound});
 
   Uri get currentConfiguration => _uris.isNotEmpty ? _uris.last : null;
 
@@ -58,9 +58,6 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
 
   @override
   Future<void> setNewRoutePath(Uri uri) async {
-    print('uri = $uri');
-    print('uri.path = ${uri.path}');
-
     bool _findRoute = false;
     for (var i = 0; i < pages.keys.length; i++) {
       final key = pages.keys.elementAt(i);
@@ -85,7 +82,9 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
     }
     if (!_findRoute) {
       final informations = FlouterInformations(uri: uri, match: null, push: setNewRoutePath);
-      _pages.add(pageNotFound(informations));
+      _pages.add(
+        pageNotFound?.call(informations) ?? Scaffold(body: Container(child: Center(child: Text('Page not found')))),
+      );
       _uris.add(uri);
       notifyListeners();
     }
