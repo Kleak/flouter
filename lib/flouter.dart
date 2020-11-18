@@ -25,11 +25,18 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
   final navigatorKey = GlobalKey<NavigatorState>();
   final _pages = <Page>[];
   final _uris = <Uri>[];
-  final PageBuilder initialPage;
+  final List<Uri> initialUris;
   final Map<RegExp, PageBuilder> pages;
   final PageBuilder pageNotFound;
 
-  UriRouterDelegate({this.initialPage, @required this.pages, this.pageNotFound});
+  bool _skipNext = false;
+
+  UriRouterDelegate({this.initialUris, @required this.pages, this.pageNotFound}) {
+    for (final uri in initialUris ?? [Uri(path: '/')]) {
+      setNewRoutePath(uri);
+    }
+    _skipNext = true;
+  }
 
   Uri get currentConfiguration => _uris.isNotEmpty ? _uris.last : null;
 
@@ -38,7 +45,7 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
     return Navigator(
       key: navigatorKey,
       pages: [
-        if (_pages.isEmpty) initialPage(FlouterInformations(uri: null, push: setNewRoutePath)) ?? Container(),
+        // if (_pages.isEmpty) initialPage(FlouterInformations(uri: null, push: setNewRoutePath)) ?? Container(),
         for (final page in _pages) page,
       ],
       onPopPage: (route, result) {
@@ -58,6 +65,11 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
 
   @override
   Future<void> setNewRoutePath(Uri uri) async {
+    if (_skipNext) {
+      _skipNext = false;
+      return;
+    }
+
     bool _findRoute = false;
     for (var i = 0; i < pages.keys.length; i++) {
       final key = pages.keys.elementAt(i);

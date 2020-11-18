@@ -20,7 +20,10 @@ class _BooksAppState extends State<BooksApp> {
         ),
       ),
     ),
-    initialPage: (flouterInformations) => HomePage(flouterInformations.push),
+    initialUris: [
+      Uri.parse('/'),
+      Uri.parse('/test/titi/'),
+    ],
     pages: {
       RegExp(r'^/$'): (flouterInformations) => HomePage(flouterInformations.push),
       RegExp(r'^/test/([a-z]+)/$'): (flouterInformations) => TestPage(flouterInformations),
@@ -102,7 +105,7 @@ class TestPage extends Page {
         return Test(
           uri: Uri(path: name),
           userId: flouterInformations.match.group(1),
-          limit: int.tryParse(flouterInformations.uri.queryParameters['limit'] ?? -1) ?? -1,
+          limit: int.tryParse(flouterInformations.uri.queryParameters['limit'] ?? '-1') ?? -1,
         );
       },
     );

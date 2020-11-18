@@ -26,7 +26,10 @@ final _routerDelegate = UriRouterDelegate(
         ),
         ),
     ),
-    initialPage: (flouterInformations) => HomePage(flouterInformations.push),
+    initialUris: [
+        Uri.parse('/'),
+        Uri.parse('/test/titi/'),
+    ],
     pages: {
         RegExp(r'^/$'): (flouterInformations) => HomePage(flouterInformations.push),
         RegExp(r'^/test/([a-z]+)/$'): (flouterInformations) => TestPage(flouterInformations),
