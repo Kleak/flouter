@@ -20,10 +20,6 @@ class _BooksAppState extends State<BooksApp> {
         ),
       ),
     ),
-    initialUris: [
-      Uri.parse('/'),
-      Uri.parse('/test/titi/'),
-    ],
     pages: {
       RegExp(r'^/$'): (flouterInformations) => HomePage(flouterInformations.push),
       RegExp(r'^/test/([a-z]+)/$'): (flouterInformations) => TestPage(flouterInformations),
@@ -47,9 +43,9 @@ class HomePage extends Page {
 
   @override
   Route createRoute(BuildContext context) {
-    return PageRouteBuilder(
+    return MaterialPageRoute(
       settings: this,
-      pageBuilder: (context, _, __) {
+      builder: (context) {
         return Home(
           pushNewRoute: pushNewRoute,
         );
