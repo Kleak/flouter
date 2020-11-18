@@ -3,7 +3,7 @@ name: Test Flouter on main
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   test:

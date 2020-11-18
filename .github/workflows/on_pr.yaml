@@ -3,7 +3,7 @@ name: Test Flouter on PR
 on:
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   test:
