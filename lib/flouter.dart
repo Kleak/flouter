@@ -84,7 +84,8 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
     if (!_findRoute) {
       final informations = FlouterInformations(uri: uri, match: null, push: setNewRoutePath);
       _pages.add(
-        pageNotFound?.call(informations) ?? Scaffold(body: Container(child: Center(child: Text('Page not found')))),
+        pageNotFound?.call(informations) ??
+            MaterialPage(child: Scaffold(body: Container(child: Center(child: Text('Page not found'))))),
       );
       _uris.add(uri);
       notifyListeners();
