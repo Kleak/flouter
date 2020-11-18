@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -39,6 +41,12 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
   }
 
   Uri get currentConfiguration => _uris.isNotEmpty ? _uris.last : null;
+
+  @visibleForTesting
+  List<Page> get internalPages => UnmodifiableListView(_pages);
+
+  @visibleForTesting
+  List<Uri> get internalUris => UnmodifiableListView(_uris);
 
   @override
   Widget build(BuildContext context) {

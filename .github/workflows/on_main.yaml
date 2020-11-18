@@ -1,0 +1,28 @@
+name: Test Flouter on main and PR
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1.3.0
+        with:
+          channel: stable
+
+      - name: Format for pub score
+        run: flutter format -n --set-exit-if-changed --line-length 120 .
+
+      - name: Build deps
+        run: flutter pub get
+
+      - name: Run test
+        run: flutter test
