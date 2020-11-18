@@ -45,7 +45,6 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
     return Navigator(
       key: navigatorKey,
       pages: [
-        // if (_pages.isEmpty) initialPage(FlouterInformations(uri: null, push: setNewRoutePath)) ?? Container(),
         for (final page in _pages) page,
       ],
       onPopPage: (route, result) {
