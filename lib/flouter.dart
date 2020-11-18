@@ -2,7 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 typedef PushNewRoute = Future<void> Function(Uri);
-typedef PageBuilder = Page Function(Uri, PushNewRoute);
+
+class FlouterInformations {
+  final Uri uri;
+  final RegExpMatch match;
+  final PushNewRoute push;
+
+  const FlouterInformations({@required this.uri, this.match, @required this.push});
+}
+
+typedef PageBuilder = Page Function(FlouterInformations);
 
 class UriRouteInformationParser extends RouteInformationParser<Uri> {
   @override
@@ -29,7 +38,7 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
     return Navigator(
       key: navigatorKey,
       pages: [
-        if (_pages.isEmpty) initialPage(null, setNewRoutePath) ?? Container(),
+        if (_pages.isEmpty) initialPage(FlouterInformations(uri: null, push: setNewRoutePath)) ?? Container(),
         for (final page in _pages) page,
       ],
       onPopPage: (route, result) {
@@ -64,14 +73,16 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
           notifyListeners();
           break;
         }
-        _pages.add(pages[key](uri, setNewRoutePath));
+        final informations = FlouterInformations(uri: uri, match: key.firstMatch(uri.path), push: setNewRoutePath);
+        _pages.add(pages[key](informations));
         _uris.add(uri);
         notifyListeners();
         _findRoute = true;
       }
     }
     if (!_findRoute) {
-      _pages.add(pageNotFound(uri, setNewRoutePath));
+      final informations = FlouterInformations(uri: uri, match: null, push: setNewRoutePath);
+      _pages.add(pageNotFound(informations));
       _uris.add(uri);
       notifyListeners();
     }

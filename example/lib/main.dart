@@ -12,18 +12,18 @@ class BooksApp extends StatefulWidget {
 
 class _BooksAppState extends State<BooksApp> {
   final _routerDelegate = UriRouterDelegate(
-    pageNotFound: (uri, _) => MaterialPage(
+    pageNotFound: (flouterInformations) => MaterialPage(
       key: ValueKey('not-found-page'),
       child: Scaffold(
         body: Center(
-          child: Text('Page ${uri.path} not found'),
+          child: Text('Page ${flouterInformations.uri.path} not found'),
         ),
       ),
     ),
-    initialPage: (_, pushNewRoute) => HomePage(pushNewRoute),
+    initialPage: (flouterInformations) => HomePage(flouterInformations.push),
     pages: {
-      RegExp(r'^/$'): (_, pushNewRoute) => HomePage(pushNewRoute),
-      RegExp(r'^/test/[a-z]+/$'): (uri, pushNewRoute) => TestPage(uri.path),
+      RegExp(r'^/$'): (flouterInformations) => HomePage(flouterInformations.push),
+      RegExp(r'^/test/[a-z]+/$'): (flouterInformations) => TestPage(flouterInformations.uri.path),
     },
   );
 
