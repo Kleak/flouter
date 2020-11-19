@@ -5,20 +5,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
-typedef PushNewUri = Future<void> Function(Uri);
-typedef PushMultipleNewUri = Future<void> Function(List<Uri>);
+typedef PushUri = Future<void> Function(Uri);
+typedef PushMultipleUri = Future<void> Function(List<Uri>);
+typedef ClearAndPushUri = Future<void> Function(Uri);
+typedef ClearAndPushMultipleUri = Future<void> Function(List<Uri>);
+typedef RemoveLastUri = void Function();
+typedef RemoveUri = void Function(Uri);
 
 class FlouterInformation {
   final Uri uri;
   final RegExpMatch match;
-  final PushNewUri pushNewUri;
-  final PushMultipleNewUri pushMultipleNewUri;
+  final PushUri pushUri;
+  final PushMultipleUri pushMultipleUri;
+  final ClearAndPushUri clearAndPushUri;
+  final ClearAndPushMultipleUri clearAndPushMultipleUri;
+  final RemoveLastUri removeLastUri;
+  final RemoveUri removeUri;
 
   const FlouterInformation({
     @required this.uri,
     this.match,
-    @required this.pushNewUri,
-    @required this.pushMultipleNewUri,
+    @required this.pushUri,
+    @required this.pushMultipleUri,
+    @required this.clearAndPushUri,
+    @required this.clearAndPushMultipleUri,
+    @required this.removeLastUri,
+    @required this.removeUri,
   });
 }
 
@@ -71,7 +83,7 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
         }
 
         if (_pages.isNotEmpty) {
-          removeLastRoute();
+          removeLastUri();
           return true;
         }
 
@@ -79,17 +91,6 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
       },
     );
   }
-
-  @experimental
-  Future<void> pushMultipleUri(List<Uri> uris) async {
-    _shouldUpdate = false;
-    for (final uri in uris) {
-      await setNewRoutePath(uri);
-    }
-    _shouldUpdate = true;
-  }
-
-  Future<void> pushNewUri(Uri uri) => setNewRoutePath(uri);
 
   @override
   Future<void> setNewRoutePath(Uri uri) {
@@ -115,8 +116,12 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
         final informations = FlouterInformation(
           uri: uri,
           match: key.firstMatch(uri.path),
-          pushNewUri: pushNewUri,
-          pushMultipleNewUri: pushMultipleUri,
+          pushUri: pushUri,
+          pushMultipleUri: pushMultipleUri,
+          clearAndPushUri: clearAndPushUri,
+          clearAndPushMultipleUri: clearAndPushMultipleUri,
+          removeLastUri: removeLastUri,
+          removeUri: removeUri,
         );
         _pages.add(pages[key](informations));
         _uris.add(uri);
@@ -128,8 +133,12 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
       final informations = FlouterInformation(
         uri: uri,
         match: null,
-        pushNewUri: pushNewUri,
-        pushMultipleNewUri: pushMultipleUri,
+        pushUri: pushUri,
+        pushMultipleUri: pushMultipleUri,
+        clearAndPushUri: clearAndPushUri,
+        clearAndPushMultipleUri: clearAndPushMultipleUri,
+        removeLastUri: removeLastUri,
+        removeUri: removeUri,
       );
       _pages.add(
         pageNotFound?.call(informations) ??
@@ -143,13 +152,37 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
     return SynchronousFuture(null);
   }
 
-  Future<void> removeRouteAtIndex(int index) async {
+  @experimental
+  Future<void> pushMultipleUri(List<Uri> uris) async {
+    _shouldUpdate = false;
+    for (final uri in uris) {
+      await setNewRoutePath(uri);
+    }
+    _shouldUpdate = true;
+  }
+
+  Future<void> pushUri(Uri uri) => setNewRoutePath(uri);
+
+  Future<void> clearAndPushUri(Uri uri) {
+    _pages.clear();
+    _uris.clear();
+    return pushUri(uri);
+  }
+
+  Future<void> clearAndPushMultipleUri(List<Uri> uris) {
+    _pages.clear();
+    _uris.clear();
+    return pushMultipleUri(uris);
+  }
+
+  void removeUri(Uri uri) {
+    final index = _uris.indexOf(uri);
     _pages.removeAt(index);
     _uris.removeAt(index);
     notifyListeners();
   }
 
-  Future<void> removeLastRoute() async {
+  void removeLastUri() {
     _pages.removeLast();
     _uris.removeLast();
     notifyListeners();

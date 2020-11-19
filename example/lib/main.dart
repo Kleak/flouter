@@ -21,7 +21,7 @@ class _BooksAppState extends State<BooksApp> {
       ),
     ),
     pages: {
-      RegExp(r'^/$'): (flouterInformation) => HomePage(flouterInformation.pushNewUri),
+      RegExp(r'^/$'): (flouterInformation) => HomePage(flouterInformation.pushUri),
       RegExp(r'^/test/([a-z]+)/$'): (flouterInformation) => TestPage(flouterInformation),
     },
   );
@@ -37,7 +37,7 @@ class _BooksAppState extends State<BooksApp> {
 }
 
 class HomePage extends Page {
-  final PushNewUri pushNewUri;
+  final PushUri pushNewUri;
 
   HomePage(this.pushNewUri) : super(key: ValueKey('home-page'));
 
@@ -55,7 +55,7 @@ class HomePage extends Page {
 }
 
 class Home extends StatelessWidget {
-  final PushNewUri pushNewUri;
+  final PushUri pushNewUri;
 
   const Home({Key key, @required this.pushNewUri}) : super(key: key);
 
