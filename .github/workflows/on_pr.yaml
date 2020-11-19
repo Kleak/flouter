@@ -17,7 +17,7 @@ jobs:
           channel: stable
 
       - name: Format for pub score
-        run: flutter format -n --set-exit-if-changed --line-length 120 .
+        run: flutter format -n --set-exit-if-changed .
 
       - name: Build deps
         run: flutter pub get
