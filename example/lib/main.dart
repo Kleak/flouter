@@ -24,7 +24,8 @@ class _BooksAppState extends State<BooksApp> {
     ),
     routes: {
       RegExp(r'^/$'): (_) => HomePage(),
-      RegExp(r'^/test/([a-z]+)/$'): (routeInformation) => TestPage(routeInformation),
+      RegExp(r'^/test/([a-z]+)/$'): (routeInformation) =>
+          TestPage(routeInformation),
     },
   );
 
@@ -67,7 +68,8 @@ class Home extends StatelessWidget {
             Text('Home'),
             TextButton(
               onPressed: () {
-                UriRouteManager.of(context).pushUri(Uri(path: '/test/toto/', queryParameters: {'limit': '12'}));
+                UriRouteManager.of(context).pushUri(
+                    Uri(path: '/test/toto/', queryParameters: {'limit': '12'}));
               },
               child: Text('Test toto'),
             ),
@@ -94,10 +96,12 @@ class TestPage extends Page {
     return MaterialPageRoute(
       settings: this,
       builder: (context) {
+        final limit =
+            int.tryParse(routeInformation.uri.queryParameters['limit'] ?? '-1');
         return Test(
           uri: routeInformation.uri,
           userId: routeInformation.match.group(1),
-          limit: int.tryParse(routeInformation.uri.queryParameters['limit'] ?? '-1') ?? -1,
+          limit: limit,
         );
       },
     );
@@ -109,7 +113,12 @@ class Test extends StatelessWidget {
   final String userId;
   final int limit;
 
-  const Test({Key key, @required this.uri, @required this.userId, @required this.limit}) : super(key: key);
+  const Test({
+    Key key,
+    @required this.uri,
+    @required this.userId,
+    @required this.limit,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
