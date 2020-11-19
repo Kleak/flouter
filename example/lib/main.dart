@@ -12,17 +12,17 @@ class BooksApp extends StatefulWidget {
 
 class _BooksAppState extends State<BooksApp> {
   final _routerDelegate = UriRouterDelegate(
-    pageNotFound: (flouterInformations) => MaterialPage(
+    pageNotFound: (flouterInformation) => MaterialPage(
       key: ValueKey('not-found-page'),
       child: Scaffold(
         body: Center(
-          child: Text('Page ${flouterInformations.uri.path} not found'),
+          child: Text('Page ${flouterInformation.uri.path} not found'),
         ),
       ),
     ),
     pages: {
-      RegExp(r'^/$'): (flouterInformations) => HomePage(flouterInformations.push),
-      RegExp(r'^/test/([a-z]+)/$'): (flouterInformations) => TestPage(flouterInformations),
+      RegExp(r'^/$'): (flouterInformation) => HomePage(flouterInformation.pushNewUri),
+      RegExp(r'^/test/([a-z]+)/$'): (flouterInformation) => TestPage(flouterInformation),
     },
   );
 
@@ -37,9 +37,9 @@ class _BooksAppState extends State<BooksApp> {
 }
 
 class HomePage extends Page {
-  final PushNewRoute pushNewRoute;
+  final PushNewUri pushNewUri;
 
-  HomePage(this.pushNewRoute) : super(key: ValueKey('home-page'));
+  HomePage(this.pushNewUri) : super(key: ValueKey('home-page'));
 
   @override
   Route createRoute(BuildContext context) {
@@ -47,7 +47,7 @@ class HomePage extends Page {
       settings: this,
       builder: (context) {
         return Home(
-          pushNewRoute: pushNewRoute,
+          pushNewUri: pushNewUri,
         );
       },
     );
@@ -55,9 +55,9 @@ class HomePage extends Page {
 }
 
 class Home extends StatelessWidget {
-  final PushNewRoute pushNewRoute;
+  final PushNewUri pushNewUri;
 
-  const Home({Key key, @required this.pushNewRoute}) : super(key: key);
+  const Home({Key key, @required this.pushNewUri}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -71,13 +71,13 @@ class Home extends StatelessWidget {
             Text('Home'),
             TextButton(
               onPressed: () {
-                pushNewRoute(Uri(path: '/test/toto/', queryParameters: {'limit': '12'}));
+                pushNewUri(Uri(path: '/test/toto/', queryParameters: {'limit': '12'}));
               },
               child: Text('Test toto'),
             ),
             TextButton(
               onPressed: () {
-                pushNewRoute(Uri(path: '/test/12345/'));
+                pushNewUri(Uri(path: '/test/12345/'));
               },
               child: Text('Test 12345'),
             ),
@@ -89,7 +89,7 @@ class Home extends StatelessWidget {
 }
 
 class TestPage extends Page {
-  final FlouterInformations flouterInformations;
+  final FlouterInformation flouterInformations;
   TestPage(this.flouterInformations)
       : super(key: ValueKey('${flouterInformations.uri.path}-page'), name: flouterInformations.uri.path);
 

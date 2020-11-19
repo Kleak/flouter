@@ -24,7 +24,7 @@ void main() {
 
       final flouter = UriRouterDelegate(
         pages: {
-          RegExp(r'^/$'): (flouterInformations) => MaterialPage(
+          RegExp(r'^/$'): (_) => MaterialPage(
                 child: Scaffold(
                   key: pageKey,
                   body: Center(
@@ -48,7 +48,7 @@ void main() {
           Uri.parse('/should_be_the_only_one'),
         ],
         pages: {
-          RegExp(r'^/should_be_the_only_one$'): (flouterInformations) => MaterialPage(
+          RegExp(r'^/should_be_the_only_one$'): (_) => MaterialPage(
                 child: Scaffold(
                   key: pageKey,
                   body: Center(
@@ -72,7 +72,7 @@ void main() {
           Uri.parse('/not_found'),
         ],
         pages: {
-          RegExp(r'^/should_be_the_only_one$'): (flouterInformations) => MaterialPage(
+          RegExp(r'^/should_be_the_only_one$'): (_) => MaterialPage(
                 child: Scaffold(
                   body: Center(
                     child: Text('Home'),
@@ -80,7 +80,7 @@ void main() {
                 ),
               ),
         },
-        pageNotFound: (flouterInformations) => MaterialPage(
+        pageNotFound: (_) => MaterialPage(
           child: Scaffold(
             key: pageKey,
             body: Text('Not found'),
@@ -102,26 +102,26 @@ void main() {
           Uri.parse('/'),
         ],
         pages: {
-          RegExp(r'^/$'): (flouterInformations) => MaterialPage(
+          RegExp(r'^/$'): (_) => MaterialPage(
                 child: Scaffold(
                   body: Center(
                     child: Text('Home'),
                   ),
                 ),
               ),
-          RegExp(r'^/page/(1)$'): (flouterInformations) => MaterialPage(
+          RegExp(r'^/page/(1)$'): (flouterInformation) => MaterialPage(
                 child: Scaffold(
                   key: page1Key,
                   body: Center(
-                    child: Text('Page ${flouterInformations.match.group(1)}'),
+                    child: Text('Page ${flouterInformation.match.group(1)}'),
                   ),
                 ),
               ),
-          RegExp(r'^/page/(2)$'): (flouterInformations) => MaterialPage(
+          RegExp(r'^/page/(2)$'): (flouterInformation) => MaterialPage(
                 child: Scaffold(
                   key: page2Key,
                   body: Center(
-                    child: Text('Page ${flouterInformations.match.group(1)}'),
+                    child: Text('Page ${flouterInformation.match.group(1)}'),
                   ),
                 ),
               ),

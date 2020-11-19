@@ -1,19 +1,28 @@
 import 'dart:collection';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:meta/meta.dart';
 
-typedef PushNewRoute = Future<void> Function(Uri);
+typedef PushNewUri = Future<void> Function(Uri);
+typedef PushMultipleNewUri = Future<void> Function(List<Uri>);
 
-class FlouterInformations {
+class FlouterInformation {
   final Uri uri;
   final RegExpMatch match;
-  final PushNewRoute push;
+  final PushNewUri pushNewUri;
+  final PushMultipleNewUri pushMultipleNewUri;
 
-  const FlouterInformations({@required this.uri, this.match, @required this.push});
+  const FlouterInformation({
+    @required this.uri,
+    this.match,
+    @required this.pushNewUri,
+    @required this.pushMultipleNewUri,
+  });
 }
 
-typedef PageBuilder = Page Function(FlouterInformations);
+typedef PageBuilder = Page Function(FlouterInformation);
 
 class UriRouteInformationParser extends RouteInformationParser<Uri> {
   @override
@@ -32,6 +41,7 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
   final PageBuilder pageNotFound;
 
   bool _skipNext = false;
+  bool _shouldUpdate = true;
 
   UriRouterDelegate({this.initialUris, @required this.pages, this.pageNotFound}) {
     for (final uri in initialUris ?? [Uri(path: '/')]) {
@@ -70,11 +80,22 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
     );
   }
 
+  @experimental
+  Future<void> pushMultipleUri(List<Uri> uris) async {
+    _shouldUpdate = false;
+    for (final uri in uris) {
+      await setNewRoutePath(uri);
+    }
+    _shouldUpdate = true;
+  }
+
+  Future<void> pushNewUri(Uri uri) => setNewRoutePath(uri);
+
   @override
-  Future<void> setNewRoutePath(Uri uri) async {
+  Future<void> setNewRoutePath(Uri uri) {
     if (_skipNext) {
       _skipNext = false;
-      return;
+      return SynchronousFuture(null);
     }
 
     bool _findRoute = false;
@@ -89,26 +110,37 @@ class UriRouterDelegate extends RouterDelegate<Uri> with ChangeNotifier, PopNavi
             _uris.removeLast();
           }
           _findRoute = true;
-          notifyListeners();
           break;
         }
-        final informations = FlouterInformations(uri: uri, match: key.firstMatch(uri.path), push: setNewRoutePath);
+        final informations = FlouterInformation(
+          uri: uri,
+          match: key.firstMatch(uri.path),
+          pushNewUri: pushNewUri,
+          pushMultipleNewUri: pushMultipleUri,
+        );
         _pages.add(pages[key](informations));
         _uris.add(uri);
-        notifyListeners();
         _findRoute = true;
         break;
       }
     }
     if (!_findRoute) {
-      final informations = FlouterInformations(uri: uri, match: null, push: setNewRoutePath);
+      final informations = FlouterInformation(
+        uri: uri,
+        match: null,
+        pushNewUri: pushNewUri,
+        pushMultipleNewUri: pushMultipleUri,
+      );
       _pages.add(
         pageNotFound?.call(informations) ??
             MaterialPage(child: Scaffold(body: Container(child: Center(child: Text('Page not found'))))),
       );
       _uris.add(uri);
+    }
+    if (_shouldUpdate) {
       notifyListeners();
     }
+    return SynchronousFuture(null);
   }
 
   Future<void> removeRouteAtIndex(int index) async {
