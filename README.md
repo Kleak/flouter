@@ -18,11 +18,11 @@ return MaterialApp.router(
 Second initialize your _routerDelegate like this :
 ```dart
 final _routerDelegate = UriRouterDelegate(
-    pageNotFound: (flouterInformations) => MaterialPage(
+    pageNotFound: (routeInformation) => MaterialPage(
         key: ValueKey('not-found-page'),
         child: Scaffold(
         body: Center(
-            child: Text('Page ${flouterInformations.uri.path} not found'),
+            child: Text('Page ${routeInformation.uri.path} not found'),
         ),
         ),
     ),
@@ -31,8 +31,8 @@ final _routerDelegate = UriRouterDelegate(
         Uri.parse('/test/titi/'),
     ],
     pages: {
-        RegExp(r'^/$'): (flouterInformations) => HomePage(flouterInformations.push),
-        RegExp(r'^/test/([a-z]+)/$'): (flouterInformations) => TestPage(flouterInformations),
+        RegExp(r'^/$'): (_) => HomePage(),
+        RegExp(r'^/test/([a-z]+)/$'): (routeInformation) => TestPage(routeInformation),
     },
 );
 ```

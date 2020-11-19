@@ -57,7 +57,6 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Home rebuild');
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
