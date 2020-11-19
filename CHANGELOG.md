@@ -1,3 +1,3 @@
-## [0.0.1] - TODO: Add release date.
+## [0.1.0] - Initial published version.
 
-* TODO: Describe initial release.
+First published version of Flouter a Flutter Router based on the Navigator 2.0 API
