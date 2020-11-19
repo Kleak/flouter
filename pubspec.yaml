@@ -1,6 +1,6 @@
 name: flouter
-description: An easy router for Flutter with navigator 2.0
-version: 0.1.0
+description: A Flutter router that is based navigator 2.0 API and use Regexp to do path matching.
+version: 0.1.1
 repository: https://github.com/Kleak/flouter
 
 environment:

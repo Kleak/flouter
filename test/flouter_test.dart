@@ -23,7 +23,7 @@ void main() {
       final pageKey = ValueKey('home-page');
 
       final flouter = UriRouterDelegate(
-        pages: {
+        routes: {
           RegExp(r'^/$'): (_) => MaterialPage(
                 child: Scaffold(
                   key: pageKey,
@@ -47,7 +47,7 @@ void main() {
         initialUris: [
           Uri.parse('/should_be_the_only_one'),
         ],
-        pages: {
+        routes: {
           RegExp(r'^/should_be_the_only_one$'): (_) => MaterialPage(
                 child: Scaffold(
                   key: pageKey,
@@ -71,7 +71,7 @@ void main() {
         initialUris: [
           Uri.parse('/not_found'),
         ],
-        pages: {
+        routes: {
           RegExp(r'^/should_be_the_only_one$'): (_) => MaterialPage(
                 child: Scaffold(
                   body: Center(
@@ -98,7 +98,7 @@ void main() {
         initialUris: [
           Uri.parse('/'),
         ],
-        pages: {
+        routes: {
           RegExp(r'^/$'): (_) => MaterialPage(
                 child: Scaffold(
                   body: Center(

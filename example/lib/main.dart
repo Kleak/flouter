@@ -22,7 +22,7 @@ class _BooksAppState extends State<BooksApp> {
         ),
       ),
     ),
-    pages: {
+    routes: {
       RegExp(r'^/$'): (_) => HomePage(),
       RegExp(r'^/test/([a-z]+)/$'): (routeInformation) => TestPage(routeInformation),
     },
