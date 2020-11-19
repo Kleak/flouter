@@ -12,19 +12,19 @@ class BooksApp extends StatefulWidget {
 
 class _BooksAppState extends State<BooksApp> {
   final _routerDelegate = UriRouterDelegate(
-    pageNotFound: (routerInformation) => MaterialPage(
+    pageNotFound: (routeInformation) => MaterialPage(
       key: ValueKey('not-found-page'),
       child: Builder(
         builder: (context) => Scaffold(
           body: Center(
-            child: Text('Page ${routerInformation.uri.path} not found'),
+            child: Text('Page ${routeInformation.uri.path} not found'),
           ),
         ),
       ),
     ),
     pages: {
       RegExp(r'^/$'): (_) => HomePage(),
-      RegExp(r'^/test/([a-z]+)/$'): (routerInformation) => TestPage(routerInformation),
+      RegExp(r'^/test/([a-z]+)/$'): (routeInformation) => TestPage(routeInformation),
     },
   );
 
@@ -85,9 +85,9 @@ class Home extends StatelessWidget {
 }
 
 class TestPage extends Page {
-  final FlouterRouteInformation routerInformation;
+  final FlouterRouteInformation routeInformation;
 
-  TestPage(this.routerInformation) : super(key: UniqueKey());
+  TestPage(this.routeInformation) : super(key: UniqueKey());
 
   @override
   Route createRoute(BuildContext context) {
@@ -95,9 +95,9 @@ class TestPage extends Page {
       settings: this,
       builder: (context) {
         return Test(
-          uri: routerInformation.uri,
-          userId: routerInformation.match.group(1),
-          limit: int.tryParse(routerInformation.uri.queryParameters['limit'] ?? '-1') ?? -1,
+          uri: routeInformation.uri,
+          userId: routeInformation.match.group(1),
+          limit: int.tryParse(routeInformation.uri.queryParameters['limit'] ?? '-1') ?? -1,
         );
       },
     );
