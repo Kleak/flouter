@@ -2,6 +2,7 @@ name: flouter
 description: An easy router for Flutter with navigator 2.0
 version: 0.1.0
 author: Kevin Segaud <me@kleak.dev>
+repository: https://github.com/Kleak/flouter
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
