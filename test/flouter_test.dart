@@ -94,9 +94,6 @@ void main() {
     });
 
     testWidgets('push/pop route', (tester) async {
-      final page1Key = ValueKey('page-1');
-      final page2Key = ValueKey('page-2');
-
       final flouter = UriRouterDelegate(
         initialUris: [
           Uri.parse('/'),
@@ -109,19 +106,17 @@ void main() {
                   ),
                 ),
               ),
-          RegExp(r'^/page/(1)$'): (flouterInformation) => MaterialPage(
+          RegExp(r'^/page/(1)$'): (routeInformation) => MaterialPage(
                 child: Scaffold(
-                  key: page1Key,
                   body: Center(
-                    child: Text('Page ${flouterInformation.match.group(1)}'),
+                    child: Text('Page ${routeInformation.match.group(1)}'),
                   ),
                 ),
               ),
-          RegExp(r'^/page/(2)$'): (flouterInformation) => MaterialPage(
+          RegExp(r'^/page/(2)$'): (routeInformation) => MaterialPage(
                 child: Scaffold(
-                  key: page2Key,
                   body: Center(
-                    child: Text('Page ${flouterInformation.match.group(1)}'),
+                    child: Text('Page ${routeInformation.match.group(1)}'),
                   ),
                 ),
               ),
