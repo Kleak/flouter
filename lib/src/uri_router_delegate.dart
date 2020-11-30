@@ -8,24 +8,26 @@ import 'package:meta/meta.dart';
 import 'package:provider/provider.dart';
 
 /// a [RouterDelegate] based on [Uri]
-class UriRouterDelegate extends RouterDelegate<Uri>
+class FlouterRouterDelegate extends RouterDelegate<Uri>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<Uri> {
   final navigatorKey = GlobalKey<NavigatorState>();
   final List<Uri> initialUris;
 
-  UriRouteManager _uriRouteManager;
+  late FlouterRouteManager _uriRouteManager;
 
-  UriRouterDelegate(
-      {this.initialUris,
-      @required Map<RegExp, PageBuilder> routes,
-      PageBuilder pageNotFound}) {
-    _uriRouteManager = UriRouteManager(
+  FlouterRouterDelegate(
+      {this.initialUris = const <Uri>[],
+      required Map<RegExp, PageBuilder> routes,
+      PageBuilder? pageNotFound}) {
+    _uriRouteManager = FlouterRouteManager(
       routes: routes,
       pageNotFound: pageNotFound,
     );
     _uriRouteManager.addListener(notifyListeners);
-
-    for (final uri in initialUris ?? [Uri(path: '/')]) {
+    if (initialUris.isEmpty) {
+      initialUris.add(Uri(path: '/'));
+    }
+    for (final uri in initialUris) {
       _uriRouteManager.pushUri(uri);
     }
     _uriRouteManager._skipNext = true;
@@ -33,7 +35,7 @@ class UriRouterDelegate extends RouterDelegate<Uri>
 
   /// get the current route [Uri]
   /// this is show by the browser if your app run in the browser
-  Uri get currentConfiguration =>
+  Uri? get currentConfiguration =>
       _uriRouteManager.uris.isNotEmpty ? _uriRouteManager.uris.last : null;
 
   /// add a new [Uri] and the corresponding [Page] on top of the navigator
@@ -47,7 +49,7 @@ class UriRouterDelegate extends RouterDelegate<Uri>
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: _uriRouteManager,
-      child: Consumer<UriRouteManager>(
+      child: Consumer<FlouterRouteManager>(
         builder: (context, uriRouteManager, _) => Navigator(
           key: navigatorKey,
           pages: [
@@ -72,14 +74,14 @@ class UriRouterDelegate extends RouterDelegate<Uri>
 }
 
 /// allow you to interact with the List of [pages]
-class UriRouteManager extends ChangeNotifier {
-  static UriRouteManager of(BuildContext context) =>
-      Provider.of<UriRouteManager>(context, listen: false);
+class FlouterRouteManager extends ChangeNotifier {
+  static FlouterRouteManager of(BuildContext context) =>
+      Provider.of<FlouterRouteManager>(context, listen: false);
 
-  UriRouteManager({@required this.routes, @required this.pageNotFound});
+  FlouterRouteManager({required this.routes, required this.pageNotFound});
 
   final Map<RegExp, PageBuilder> routes;
-  final PageBuilder pageNotFound;
+  final PageBuilder? pageNotFound;
 
   final _internalPages = <Page>[];
   final _internalUris = <Uri>[];
@@ -116,7 +118,8 @@ class UriRouteManager extends ChangeNotifier {
           break;
         }
         final match = key.firstMatch(uri.path);
-        _internalPages.add(routes[key](FlouterRouteInformation(uri, match)));
+        final route = routes[key]!;
+        _internalPages.add(route(FlouterRouteInformation(uri, match)));
         _internalUris.add(uri);
         _findRoute = true;
         break;

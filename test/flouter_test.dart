@@ -4,15 +4,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flouter/flouter.dart';
 
 class TestBed extends StatelessWidget {
-  final RouterDelegate routerDelegate;
+  final RouterDelegate<Object> routerDelegate;
 
-  const TestBed({Key key, this.routerDelegate}) : super(key: key);
+  const TestBed({Key? key, required this.routerDelegate}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerDelegate: routerDelegate,
-      routeInformationParser: UriRouteInformationParser(),
+      routeInformationParser: FlouterRouteInformationParser(),
     );
   }
 }
@@ -22,7 +22,7 @@ void main() {
     testWidgets('default', (tester) async {
       final pageKey = ValueKey('home-page');
 
-      final flouter = UriRouterDelegate(
+      final flouter = FlouterRouterDelegate(
         routes: {
           RegExp(r'^/$'): (_) => MaterialPage(
                 child: Scaffold(
@@ -43,7 +43,7 @@ void main() {
     testWidgets('with initial route', (tester) async {
       final pageKey = ValueKey('only-one-page');
 
-      final flouter = UriRouterDelegate(
+      final flouter = FlouterRouterDelegate(
         initialUris: [
           Uri.parse('/should_be_the_only_one'),
         ],
@@ -67,7 +67,7 @@ void main() {
     testWidgets('initial route not found', (tester) async {
       final pageKey = ValueKey('not-found');
 
-      final flouter = UriRouterDelegate(
+      final flouter = FlouterRouterDelegate(
         initialUris: [
           Uri.parse('/not_found'),
         ],
@@ -94,7 +94,7 @@ void main() {
     });
 
     testWidgets('push/pop route', (tester) async {
-      final flouter = UriRouterDelegate(
+      final flouter = FlouterRouterDelegate(
         initialUris: [
           Uri.parse('/'),
         ],
@@ -109,14 +109,14 @@ void main() {
           RegExp(r'^/page/(1)$'): (routeInformation) => MaterialPage(
                 child: Scaffold(
                   body: Center(
-                    child: Text('Page ${routeInformation.match.group(1)}'),
+                    child: Text('Page ${routeInformation.match?.group(1)}'),
                   ),
                 ),
               ),
           RegExp(r'^/page/(2)$'): (routeInformation) => MaterialPage(
                 child: Scaffold(
                   body: Center(
-                    child: Text('Page ${routeInformation.match.group(1)}'),
+                    child: Text('Page ${routeInformation.match?.group(1)}'),
                   ),
                 ),
               ),
