@@ -1,3 +1,11 @@
+## [0.2.0-nullsafety.0] - Flouter + nullsafety = <3 
+
+* **BREAKING** rename `UriRouteInformationParser` to `FlouterRouteInformationParser`
+* **BREAKING** rename `UriRouterDelegate` to `FlouterRouterDelegate`
+* **BREAKING** rename `UriRouteManager` to `FlouterRouteManager`
+
+Flouter is now compatible with dart nullsafety feature
+
 ## [0.1.1] - improve pub score
 
 * add basic documentation
