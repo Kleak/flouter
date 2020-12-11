@@ -1,7 +1,7 @@
 name: flouter
 description: A Flutter router that is based navigator 2.0 API and use Regexp to do path matching.
 version: 0.2.0-nullsafety.1
-repository: https://github.com/Kleak/flouter
+repository: https://github.com/Kleak/flouter/tree/nullsafety
 
 environment:
   sdk: ">=2.12.0-0.0 <3.0.0"
