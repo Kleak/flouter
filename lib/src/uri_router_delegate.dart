@@ -15,10 +15,11 @@ class FlouterRouterDelegate extends RouterDelegate<Uri>
 
   late FlouterRouteManager _uriRouteManager;
 
-  FlouterRouterDelegate(
-      {this.initialUris = const <Uri>[],
-      required Map<RegExp, PageBuilder> routes,
-      PageBuilder? pageNotFound}) {
+  FlouterRouterDelegate({
+    this.initialUris = const <Uri>[],
+    required Map<RegExp, PageBuilder> routes,
+    PageBuilder? pageNotFound,
+  }) {
     _uriRouteManager = FlouterRouteManager(
       routes: routes,
       pageNotFound: pageNotFound,

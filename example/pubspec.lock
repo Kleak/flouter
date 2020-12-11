@@ -63,7 +63,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.2.0-nullsafety.0"
+    version: "0.2.0-nullsafety.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -94,7 +94,7 @@ packages:
       name: nested
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.4"
+    version: "0.0.5-nullsafety.1"
   path:
     dependency: transitive
     description:
@@ -108,7 +108,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.3.2+2"
+    version: "5.0.0-nullsafety.1"
   sky_engine:
     dependency: transitive
     description: flutter
