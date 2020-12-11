@@ -1,4 +1,4 @@
-## [0.2.0-nullsafety.0] - Flouter + nullsafety = <3 
+## [0.2.0-nullsafety.1] - Flouter + nullsafety = <3 
 
 * **BREAKING** rename `UriRouteInformationParser` to `FlouterRouteInformationParser`
 * **BREAKING** rename `UriRouterDelegate` to `FlouterRouterDelegate`
