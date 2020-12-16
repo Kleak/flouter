@@ -63,7 +63,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.2.0-nullsafety.0"
+    version: "0.2.0-nullsafety.2"
   flutter:
     dependency: "direct main"
     description: flutter
