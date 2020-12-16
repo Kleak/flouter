@@ -12,7 +12,7 @@ class FlouterRouterDelegate extends RouterDelegate<Uri>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<Uri> {
   final navigatorKey = GlobalKey<NavigatorState>();
 
-  late FlouterRouteManager _uriRouteManager;
+  late final FlouterRouteManager flouterRouteManager;
 
   FlouterRouterDelegate({
     List<Uri>? initialUris,
@@ -20,32 +20,36 @@ class FlouterRouterDelegate extends RouterDelegate<Uri>
     PageBuilder? pageNotFound,
   }) {
     final _initialUris = initialUris ?? <Uri>[Uri(path: '/')];
-    _uriRouteManager = FlouterRouteManager(
+    flouterRouteManager = FlouterRouteManager(
       routes: routes,
       pageNotFound: pageNotFound,
     );
     for (final uri in _initialUris) {
-      _uriRouteManager.pushUri(uri);
+      flouterRouteManager.pushUri(uri);
     }
-    _uriRouteManager._skipNext = true;
+    flouterRouteManager._skipNext = true;
   }
+
+  @visibleForTesting
+  List<Uri> get uris => flouterRouteManager.uris;
 
   /// get the current route [Uri]
   /// this is show by the browser if your app run in the browser
-  Uri? get currentConfiguration =>
-      _uriRouteManager.uris.isNotEmpty ? _uriRouteManager.uris.last : null;
+  Uri? get currentConfiguration => flouterRouteManager.uris.isNotEmpty
+      ? flouterRouteManager.uris.last
+      : null;
 
   /// add a new [Uri] and the corresponding [Page] on top of the navigator
   @override
   Future<void> setNewRoutePath(Uri uri) {
-    return _uriRouteManager.pushUri(uri);
+    return flouterRouteManager.pushUri(uri);
   }
 
   /// @nodoc
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
-      value: _uriRouteManager,
+      value: flouterRouteManager,
       child: Consumer<FlouterRouteManager>(
         builder: (context, uriRouteManager, _) => Navigator(
           key: navigatorKey,
@@ -104,16 +108,6 @@ class FlouterRouteManager extends ChangeNotifier {
     for (var i = 0; i < routes.keys.length; i++) {
       final key = routes.keys.elementAt(i);
       if (key.hasMatch(uri.path)) {
-        if (_internalUris.contains(uri)) {
-          final position = _internalUris.indexOf(uri);
-          final _urisLengh = _internalUris.length;
-          for (var start = position; start < _urisLengh - 1; start++) {
-            _internalPages.removeLast();
-            _internalUris.removeLast();
-          }
-          _findRoute = true;
-          break;
-        }
         final match = key.firstMatch(uri.path);
         final route = routes[key]!;
         _internalPages.add(route(FlouterRouteInformation(uri, match)));
@@ -151,6 +145,7 @@ class FlouterRouteManager extends ChangeNotifier {
     for (final uri in uris) {
       await pushUri(uri);
     }
+    notifyListeners();
     _shouldUpdate = true;
   }
 
@@ -165,10 +160,12 @@ class FlouterRouteManager extends ChangeNotifier {
   }
 
   /// allow you clear the list of [pages] and then push multiple [Uri] at once
-  Future<void> clearAndPushMultipleUri(List<Uri> uris) {
+  @experimental
+  Future<void> clearAndPushMultipleUri(List<Uri> uris) async {
     _internalPages.clear();
     _internalUris.clear();
-    return pushMultipleUri(uris);
+    await pushMultipleUri(uris);
+    notifyListeners();
   }
 
   /// allow you to remove a specific [Uri] and the corresponding [Page]

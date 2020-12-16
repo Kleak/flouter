@@ -128,24 +128,35 @@ void main() {
       expect(find.text('Home'), findsOneWidget);
       expect(find.text('Page 1'), findsNothing);
       expect(find.text('Page 2'), findsNothing);
+      expect(flouter.uris.length, equals(1));
 
-      await flouter.setNewRoutePath(Uri.parse('/page/1'));
+      await flouter.flouterRouteManager.pushUri(Uri.parse('/page/1'));
       await tester.pumpAndSettle();
       expect(find.text('Home'), findsNothing);
       expect(find.text('Page 1'), findsOneWidget);
       expect(find.text('Page 2'), findsNothing);
+      expect(flouter.uris.length, equals(2));
 
-      await flouter.setNewRoutePath(Uri.parse('/page/2'));
+      await flouter.flouterRouteManager.pushUri(Uri.parse('/page/2'));
       await tester.pumpAndSettle();
       expect(find.text('Home'), findsNothing);
       expect(find.text('Page 1'), findsNothing);
       expect(find.text('Page 2'), findsOneWidget);
+      expect(flouter.uris.length, equals(3));
 
-      await flouter.setNewRoutePath(Uri.parse('/'));
+      await flouter.flouterRouteManager.pushUri(Uri.parse('/'));
       await tester.pumpAndSettle();
       expect(find.text('Home'), findsOneWidget);
       expect(find.text('Page 1'), findsNothing);
       expect(find.text('Page 2'), findsNothing);
+      expect(flouter.uris.length, equals(4));
+
+      flouter.flouterRouteManager.removeLastUri();
+      await tester.pumpAndSettle();
+      expect(find.text('Home'), findsNothing);
+      expect(find.text('Page 1'), findsNothing);
+      expect(find.text('Page 2'), findsOneWidget);
+      expect(flouter.uris.length, equals(3));
     });
   });
 }
