@@ -132,7 +132,7 @@ class Test extends StatelessWidget {
             Text('test $uri'),
             Text('userId = $userId'),
             Text('limit = $limit'),
-            FlatButton(
+            TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
