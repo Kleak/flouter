@@ -55,7 +55,7 @@ class HomePage extends Page {
 }
 
 class Home extends StatelessWidget {
-  const Home({Key key}) : super(key: key);
+  const Home({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -97,10 +97,10 @@ class TestPage extends Page {
       settings: this,
       builder: (context) {
         final limit =
-            int.tryParse(routeInformation.uri.queryParameters['limit'] ?? '-1');
+            int.parse(routeInformation.uri.queryParameters['limit'] ?? '-1');
         return Test(
           uri: routeInformation.uri,
-          userId: routeInformation.match.group(1),
+          userId: routeInformation.match!.group(1)!,
           limit: limit,
         );
       },
@@ -114,10 +114,10 @@ class Test extends StatelessWidget {
   final int limit;
 
   const Test({
-    Key key,
-    @required this.uri,
-    @required this.userId,
-    @required this.limit,
+    Key? key,
+    required this.uri,
+    required this.userId,
+    required this.limit,
   }) : super(key: key);
 
   @override
