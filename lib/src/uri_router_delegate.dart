@@ -8,46 +8,49 @@ import 'package:meta/meta.dart';
 import 'package:provider/provider.dart';
 
 /// a [RouterDelegate] based on [Uri]
-class UriRouterDelegate extends RouterDelegate<Uri>
+class FlouterRouterDelegate extends RouterDelegate<Uri>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<Uri> {
   final navigatorKey = GlobalKey<NavigatorState>();
-  final List<Uri> initialUris;
 
-  UriRouteManager _uriRouteManager;
+  late final FlouterRouteManager flouterRouteManager;
 
-  UriRouterDelegate(
-      {this.initialUris,
-      @required Map<RegExp, PageBuilder> routes,
-      PageBuilder pageNotFound}) {
-    _uriRouteManager = UriRouteManager(
+  FlouterRouterDelegate({
+    List<Uri>? initialUris,
+    required Map<RegExp, PageBuilder> routes,
+    PageBuilder? pageNotFound,
+  }) {
+    final _initialUris = initialUris ?? <Uri>[Uri(path: '/')];
+    flouterRouteManager = FlouterRouteManager(
       routes: routes,
       pageNotFound: pageNotFound,
     );
-    _uriRouteManager.addListener(notifyListeners);
-
-    for (final uri in initialUris ?? [Uri(path: '/')]) {
-      _uriRouteManager.pushUri(uri);
+    for (final uri in _initialUris) {
+      flouterRouteManager.pushUri(uri);
     }
-    _uriRouteManager._skipNext = true;
+    flouterRouteManager._skipNext = true;
   }
+
+  @visibleForTesting
+  List<Uri> get uris => flouterRouteManager.uris;
 
   /// get the current route [Uri]
   /// this is show by the browser if your app run in the browser
-  Uri get currentConfiguration =>
-      _uriRouteManager.uris.isNotEmpty ? _uriRouteManager.uris.last : null;
+  Uri? get currentConfiguration => flouterRouteManager.uris.isNotEmpty
+      ? flouterRouteManager.uris.last
+      : null;
 
   /// add a new [Uri] and the corresponding [Page] on top of the navigator
   @override
   Future<void> setNewRoutePath(Uri uri) {
-    return _uriRouteManager.pushUri(uri);
+    return flouterRouteManager.pushUri(uri);
   }
 
   /// @nodoc
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
-      value: _uriRouteManager,
-      child: Consumer<UriRouteManager>(
+      value: flouterRouteManager,
+      child: Consumer<FlouterRouteManager>(
         builder: (context, uriRouteManager, _) => Navigator(
           key: navigatorKey,
           pages: [
@@ -72,14 +75,14 @@ class UriRouterDelegate extends RouterDelegate<Uri>
 }
 
 /// allow you to interact with the List of [pages]
-class UriRouteManager extends ChangeNotifier {
-  static UriRouteManager of(BuildContext context) =>
-      Provider.of<UriRouteManager>(context, listen: false);
+class FlouterRouteManager extends ChangeNotifier {
+  static FlouterRouteManager of(BuildContext context) =>
+      Provider.of<FlouterRouteManager>(context, listen: false);
 
-  UriRouteManager({@required this.routes, @required this.pageNotFound});
+  FlouterRouteManager({required this.routes, required this.pageNotFound});
 
   final Map<RegExp, PageBuilder> routes;
-  final PageBuilder pageNotFound;
+  final PageBuilder? pageNotFound;
 
   final _internalPages = <Page>[];
   final _internalUris = <Uri>[];
@@ -105,18 +108,9 @@ class UriRouteManager extends ChangeNotifier {
     for (var i = 0; i < routes.keys.length; i++) {
       final key = routes.keys.elementAt(i);
       if (key.hasMatch(uri.path)) {
-        if (_internalUris.contains(uri)) {
-          final position = _internalUris.indexOf(uri);
-          final _urisLengh = _internalUris.length;
-          for (var start = position; start < _urisLengh - 1; start++) {
-            _internalPages.removeLast();
-            _internalUris.removeLast();
-          }
-          _findRoute = true;
-          break;
-        }
         final match = key.firstMatch(uri.path);
-        _internalPages.add(routes[key](FlouterRouteInformation(uri, match)));
+        final route = routes[key]!;
+        _internalPages.add(route(FlouterRouteInformation(uri, match)));
         _internalUris.add(uri);
         _findRoute = true;
         break;
@@ -151,6 +145,7 @@ class UriRouteManager extends ChangeNotifier {
     for (final uri in uris) {
       await pushUri(uri);
     }
+    notifyListeners();
     _shouldUpdate = true;
   }
 
@@ -165,10 +160,12 @@ class UriRouteManager extends ChangeNotifier {
   }
 
   /// allow you clear the list of [pages] and then push multiple [Uri] at once
-  Future<void> clearAndPushMultipleUri(List<Uri> uris) {
+  @experimental
+  Future<void> clearAndPushMultipleUri(List<Uri> uris) async {
     _internalPages.clear();
     _internalUris.clear();
-    return pushMultipleUri(uris);
+    await pushMultipleUri(uris);
+    notifyListeners();
   }
 
   /// allow you to remove a specific [Uri] and the corresponding [Page]

@@ -1,17 +1,17 @@
 name: flouter
 description: A Flutter router that is based navigator 2.0 API and use Regexp to do path matching.
-version: 0.1.1
-repository: https://github.com/Kleak/flouter
+version: 0.2.0
+repository: https://github.com/Kleak/flouter/tree/nullsafety
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
-  flutter: ">=1.17.0"
+  sdk: ">=2.12.0-0 <3.0.0"
+  flutter: ">=1.22.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  meta: ^1.2.4
-  provider: ^4.3.2+2
+  meta: ^1.3.0
+  provider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
